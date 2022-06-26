@@ -1,23 +1,85 @@
-# Salesforce DX Project: Next Steps
+# QDX Utils
 
 <a href="https://githubsfdeploy.herokuapp.com">
   <img alt="Deploy to Salesforce"
        src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
 </a>
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+These are some utilities for use in salesforce projects.
 
-## How Do You Plan to Deploy Your Changes?
+## Salesforce Logging Utility
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+This utility is based on salesforce platform events for providing an efficient alternative to traditional System.debug logging. You can configure this utility to get log events for a specific class and method. You can also filter the log results for a specific user as needed.
 
-## Configure Your Salesforce DX Project
+### How to Configure
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+Configuration is simple. Just add the __qdxLogMonitor__ lightning web component to any lightning app page where you would like to see the log events.
 
-## Read All About It
+![Log Viewer](assets/viewer.png)
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+To get log events for a class, start by setting up "Log Setting" custom metadata type records. Set the MasterLabel of record  same as the class API name. This is case sensitive so make sure it matches exactly with the class API name. Set the aggregate checkbox to true if you want to control when the events are fired. If set to false, you will see events as the code is executed even if the transaction fails or rolls back.
+
+![Log Settings](assets/setting.gif)
+
+Within your classes, you can replace any System.debug statements with __QDX_Log.debug__ method. If you need to persist error in database, you can call the __QDX_Log.error__ method. For this to work, you will also need to configure a metadata type record where QDX_ErrorClassName is set to the class API name where __QDX_Log.IError__ interface is implemented.
+
+- There is no instantiation of anything required. Simply use __QDX_Log.debug__ same as you would have done with __System.debug__.
+- If you have setup the metadata type record to aggregate, you must use __QDX_Log.publish()__ towards the end of a transaction.
+  - You can publish as many times as you need; just keep in mind that there is limit of 150.
+  - Consider further specifying a method if you are not aggregating events.
+- To implement __QDX_Log.IError__ interface, simply create a method with signature **void create(List<QDX_Log__e> errorEvents)**
+- Remember that you will only see events for which a Log Setting metadata type record is configured.
+
+```java
+//Before
+Account acc = [SELECT Id, Name FROM Account WHERE Id = '0010006354Tyyhe'];
+System.debug('----> Account record: ' + acc);
+
+//After
+Account acc = [SELECT Id, Name FROM Account WHERE Id = '0010006354Tyyhe'];
+QDX_Log.debug('Account record: ' + acc);
+
+// You can also pass a list of sObjects (or any other type) to be logged
+QDX_Log.debug(accountList);
+QDX_Log.debug(contactList);
+
+//We can also pass a format string and values
+QDX_Log.debug('Viewing {0} account with {1} contacts', new List<Object>{acc.Name, contactList.size()};
+
+```
+
+![Log Statements](assets/class-debug.gif)
+
+### Additional Info
+
+- This utility exposes following methods;
+  - QDX_Log.debug
+  - QDX_Log.error
+  - QDX_Log.limits
+  - QDX_Log.publish
+- The limits and publish methods don't take any parameters.
+- The debug/error methods can take following parameters;
+  - First parameter can be a string, an object or list of objects
+  - Optionally you can pass an id as the second parameter. By default, the utility will group events by the event timestamp. If an Id parameter is passed then that is used for grouping.
+
+### Sample Implementation of QDX_Log.IError Interface
+
+```java
+public with sharing class CreateError implements QDX_Log.IError {
+    public void create(List<QDX_Log__e> errorEvents) {
+        List<Case> errorCases = new List<Case>();
+
+        for (QDX_Log__e error : errorEvents) {
+            errorCases.add(new Case(
+                Subject = 'Error in ' + className + '.' + methodName,
+                Description = 'Failed at line number ' + lineNumber + '\n' + message
+            ));
+        }
+        insert errorCases;
+    }
+}
+```
+
+This utility is inspired by [this](https://github.com/rsoesemann/apex-unified-logging).
+
+Enjoy!
