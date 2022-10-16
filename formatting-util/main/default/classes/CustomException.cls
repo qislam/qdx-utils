@@ -2,7 +2,7 @@ public with sharing class CustomException extends Exception{
 
     public enum ErrorCode {
         ERROR_PROCESSING,
-        GEICO_PROPERTY_NOT_FOUND,
+        PROPERTY_NOT_FOUND,
         MISSING_PARAMETER,
         UNEXPECTED_VALUE
     }
@@ -17,8 +17,8 @@ public with sharing class CustomException extends Exception{
         switch on errorCodeParam {
             when ERROR_PROCESSING {
                 message = 'Could not process the request. ' + message;
-            } when GEICO_PROPERTY_NOT_FOUND {
-                message = 'No GeicoProperty record found matching provided label. ' + message;
+            } when PROPERTY_NOT_FOUND {
+                message = 'No Property record found matching provided label. ' + message;
             } when MISSING_PARAMETER {
                 message = 'One or more of required parameters are missing. ' + message;
             } when UNEXPECTED_VALUE {
