@@ -1,0 +1,36 @@
+public with sharing class CustomException extends Exception{
+
+    public enum ErrorCode {
+        ERROR_PROCESSING,
+        GEICO_PROPERTY_NOT_FOUND,
+        MISSING_PARAMETER,
+        UNEXPECTED_VALUE
+    }
+    public CustomException(ErrorCode errorCodeParam) {
+        this(errorCodeParam, '');
+    }
+
+    public CustomException(ErrorCode errorCodeParam, String message) {
+        this.currentError = errorCodeParam;
+
+        if (message == null) { message = '';}
+        switch on errorCodeParam {
+            when ERROR_PROCESSING {
+                message = 'Could not process the request. ' + message;
+            } when GEICO_PROPERTY_NOT_FOUND {
+                message = 'No GeicoProperty record found matching provided label. ' + message;
+            } when MISSING_PARAMETER {
+                message = 'One or more of required parameters are missing. ' + message;
+            } when UNEXPECTED_VALUE {
+                message = 'Value provided is not as expected. ' + message;
+            }
+        }
+        this.setMessage(getErrorCode() + ': ' + message);
+    }
+
+    public String getErrorCode() {
+        return this.currentError.name();
+    }
+
+    private ErrorCode currentError;
+}

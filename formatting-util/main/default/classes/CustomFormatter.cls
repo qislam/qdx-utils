@@ -16,10 +16,6 @@ public virtual class CustomFormatter {
         this.replacementsMap = new Map<String, String>();
     }
 
-    public CustomFormatter(Map<String, String> replacements) {
-        this.replacementsMap = replacements;
-    }
-
     public CustomFormatter(Map<String, Object> replacements) {
         setReplacements(replacements, 'json');
     }
@@ -29,26 +25,11 @@ public virtual class CustomFormatter {
     }
 
     public CustomFormatter(sObject sobjectParam) {
-        String objectName = String.valueOf(sobjectParam.getSObjectType());
-        Map<String, Object> objectFieldsMap = sobjectParam.getPopulatedFieldsAsMap();
-        this.replacementsMap = new Map<String, String>();
-
-        for (String key : objectFieldsMap.keySet()) {
-            this.replacementsMap.put(objectName + '.' + key, String.valueOf(objectFieldsMap.get(key)));
-        }
+        setReplacements(sobjectParam, null);
     }
 
-    public CustomFormatter(Formatable formatableInstance) {
-        this.replacementsMap = formatableInstance.getReplacementsMap();
-    }
-
-    public CustomFormatter(Formatable formatableInstance, String className) {
-        this.replacementsMap = new Map<String, String>();
-        Map<String, String> instanceReplacements = formatableInstance.getReplacementsMap();
-
-        for (String key : instanceReplacements.keySet()) {
-            this.replacementsMap.put(className + '.' + key, instanceReplacements.get(key));
-        }
+    public CustomFormatter(sObject sobjectParam, String objectNameParam) {
+        setReplacements(sobjectParam, objectNameParam);
     }
 
     public CustomFormatter addReplacements(Map<String, String> replacements) {
@@ -65,23 +46,6 @@ public virtual class CustomFormatter {
 
         for (String key : objectFieldsMap.keySet()) {
             this.replacementsMap.put(objectName + '.' + key, String.valueOf(objectFieldsMap.get(key)));
-        }
-
-        return this;
-    }
-
-    public CustomFormatter addReplacements(Formatable formatableInstance) {
-        if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
-        this.replacementsMap.putAll(formatableInstance.getReplacementsMap());
-        return this;
-    }
-
-    public CustomFormatter addReplacements(Formatable formatableInstance, String className) {
-        if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
-        Map<String, String> instanceReplacements = formatableInstance.getReplacementsMap();
-
-        for (String key : instanceReplacements.keySet()) {
-            this.replacementsMap.put(className + '.' + key, instanceReplacements.get(key));
         }
 
         return this;
@@ -112,10 +76,6 @@ public virtual class CustomFormatter {
         return template;
     }
 
-    public interface Formatable {
-        Map<String, String> getReplacementsMap();
-    }
-
     private void setReplacements(Map<String, Object> replacements, String prefix) {
         if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
         
@@ -127,6 +87,22 @@ public virtual class CustomFormatter {
             } else {
                 this.replacementsMap.put(prefix + '.' + key, String.valueOf(replacements.get(key)));
             }
+        }
+    }
+
+    private void setReplacements(SObject sobjectParam, String objectNameParam) {
+        if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
+
+        String objectName = objectNameParam;
+        if (String.isBlank(objectName)) {
+            objectName = String.valueOf(sobjectParam.getSObjectType());
+        }
+       
+        Map<String, Object> objectFieldsMap = sobjectParam.getPopulatedFieldsAsMap();
+        this.replacementsMap = new Map<String, String>();
+
+        for (String key : objectFieldsMap.keySet()) {
+            this.replacementsMap.put(objectName + '.' + key, String.valueOf(objectFieldsMap.get(key)));
         }
     }
 
