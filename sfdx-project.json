@@ -3,10 +3,18 @@
     {
       "path": "src",
       "default": true
+    },
+    {
+      "path": "logging-util",
+      "default": false
+    },
+    {
+      "path": "formatting-util",
+      "default": false
     }
   ],
   "name": "qdx-utils",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "52.0"
+  "sourceApiVersion": "55.0"
 }
