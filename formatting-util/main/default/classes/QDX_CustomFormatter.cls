@@ -1,53 +1,67 @@
-/*****************************************************************
-Name:  CustomFormatter
-Copyright © 2016  Incapsulate
-============================================================
-Purpose: To replace indices in String with values using pattern matching                                                              
-============================================================
-History                                                            
--------                                                            
-VERSION  AUTHOR         DATE            DETAIL      Description
-   1.0   Qamar Islam    March 29, 2022  Created     Replace indices in String with values
-*****************************************************************/
-public virtual class CustomFormatter {
+/*
+* QDX_CustomFormatter
+* @author Qamar Islam (https://github.com/qislam)
+* @description This class is for formatting strings using attribute names.
+*/
+
+public virtual class QDX_CustomFormatter {
     public Map<String, String> replacementsMap;
 
-    public CustomFormatter() {
+    public QDX_CustomFormatter() {
         this.replacementsMap = new Map<String, String>();
     }
 
-    public CustomFormatter(Map<String, Object> replacements) {
+    public QDX_CustomFormatter(String jsonString) {
+        setReplacements(jsonString, 'json');
+    }
+
+    public QDX_CustomFormatter(String jsonString, String prefix) {
+        setReplacements(jsonString, prefix);
+    }
+
+    public QDX_CustomFormatter(Map<String, Object> replacements) {
         setReplacements(replacements, 'json');
     }
 
-    public CustomFormatter(Map<String, Object> replacements, String prefix) {
+    public QDX_CustomFormatter(Map<String, Object> replacements, String prefix) {
         setReplacements(replacements, prefix);
     }
 
-    public CustomFormatter(sObject sobjectParam) {
+    public QDX_CustomFormatter(sObject sobjectParam) {
         setReplacements(sobjectParam, null);
     }
 
-    public CustomFormatter(sObject sobjectParam, String objectNameParam) {
+    public QDX_CustomFormatter(sObject sobjectParam, String objectNameParam) {
         setReplacements(sobjectParam, objectNameParam);
     }
 
-    public CustomFormatter addReplacements(Map<String, String> replacements) {
-        if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
-        this.replacementsMap.putAll(replacements);
+    public QDX_CustomFormatter addReplacements(String jsonString) {
+        setReplacements(jsonString, 'json');
         return this;
     }
 
-    public CustomFormatter addReplacements(sObject sobjectParam) {
-        if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
+    public QDX_CustomFormatter addReplacements(String jsonString, String prefix) {
+        setReplacements(jsonString, prefix);
+        return this;
+    }
 
-        String objectName = String.valueOf(sobjectParam.getSObjectType());
-        Map<String, Object> objectFieldsMap = sobjectParam.getPopulatedFieldsAsMap();
+    public QDX_CustomFormatter addReplacements(Map<String, String> replacements) {
+        setReplacements(replacements, 'json');
+        return this;
+    }
 
-        for (String key : objectFieldsMap.keySet()) {
-            this.replacementsMap.put(objectName + '.' + key, String.valueOf(objectFieldsMap.get(key)));
-        }
+    public QDX_CustomFormatter addReplacements(Map<String, String> replacements, String prefix) {
+        setReplacements(replacements, prefix);
+        return this;
+    }
 
+    public QDX_CustomFormatter addReplacements(sObject sobjectParam) {
+        setReplacements(sobjectParam, null);
+        return this;
+    }
+
+    public QDX_CustomFormatter addReplacements(sObject sobjectParam, String objectNameParam) {
+        setReplacements(sobjectParam, objectNameParam);
         return this;
     }
 
@@ -74,6 +88,15 @@ public virtual class CustomFormatter {
             template = template.removeEnd(',');
         }
         return template;
+    }
+
+    private void setReplacements(String jsonString, String prefix) {
+        try {
+            Map<String, Object> replacements = (Map<String, Object>)JSON.deserializeUntyped(jsonString);
+            setReplacements(replacements, prefix);
+        } catch(Exception ex) {
+            if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
+        }
     }
 
     private void setReplacements(Map<String, Object> replacements, String prefix) {

@@ -1,4 +1,9 @@
-public with sharing class CustomException extends Exception{
+/*
+* QDX_CustomException
+* @author Qamar Islam (https://github.com/qislam)
+* @description This class is for standardizing exceptions.
+*/
+public with sharing class QDX_CustomException extends Exception{
 
     public enum ErrorCode {
         ERROR_PROCESSING,
@@ -6,11 +11,11 @@ public with sharing class CustomException extends Exception{
         MISSING_PARAMETER,
         UNEXPECTED_VALUE
     }
-    public CustomException(ErrorCode errorCodeParam) {
+    public QDX_CustomException(ErrorCode errorCodeParam) {
         this(errorCodeParam, '');
     }
 
-    public CustomException(ErrorCode errorCodeParam, String message) {
+    public QDX_CustomException(ErrorCode errorCodeParam, String message) {
         this.currentError = errorCodeParam;
 
         if (message == null) { message = '';}
