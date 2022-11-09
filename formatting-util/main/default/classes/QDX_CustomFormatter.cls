@@ -5,7 +5,6 @@
 */
 
 public virtual class QDX_CustomFormatter {
-    public Map<String, String> replacementsMap;
 
     public QDX_CustomFormatter() {
         this.replacementsMap = new Map<String, String>();
@@ -90,7 +89,10 @@ public virtual class QDX_CustomFormatter {
         return template;
     }
 
+    private Map<String, String> replacementsMap;
+
     private void setReplacements(String jsonString, String prefix) {
+        if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
         try {
             Map<String, Object> replacements = (Map<String, Object>)JSON.deserializeUntyped(jsonString);
             setReplacements(replacements, prefix);
@@ -122,7 +124,6 @@ public virtual class QDX_CustomFormatter {
         }
        
         Map<String, Object> objectFieldsMap = sobjectParam.getPopulatedFieldsAsMap();
-        this.replacementsMap = new Map<String, String>();
 
         for (String key : objectFieldsMap.keySet()) {
             this.replacementsMap.put(objectName + '.' + key, String.valueOf(objectFieldsMap.get(key)));
