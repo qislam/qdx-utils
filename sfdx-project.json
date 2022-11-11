@@ -2,15 +2,15 @@
   "packageDirectories": [
     {
       "path": "src",
-      "default": true
+      "default": false
     },
     {
       "path": "logging-util",
       "default": false
     },
     {
-      "path": "formatting-util",
-      "default": false
+      "path": "base-utils",
+      "default": true
     }
   ],
   "name": "qdx-utils",

@@ -1,0 +1,13 @@
+<template>
+    <lightning-card title={cardTitle} icon-name="custom:custom18">
+        <div class="slds-text-longform slds-align_absolute-center"> 
+            <ul class="slds-list_dotted"> 
+                <template for:each={formattedSummaries} for:item="formattedSummary">
+                    <li key={formattedSummary.Id}>
+                        {formattedSummary.value}
+                    </li>
+                </template>
+            </ul> 
+        </div>
+    </lightning-card>
+</template>

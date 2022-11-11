@@ -69,7 +69,7 @@ public virtual class QDX_CustomFormatter {
     }
 
     public String format(String template, Boolean normalizeSpace) {
-        Pattern p = Pattern.compile('\\{[a-zA-Z0-9\\.]+\\}');
+        Pattern p = Pattern.compile('\\{[a-zA-Z0-9_\\.]+\\}');
         Matcher m = p.matcher(template);
         
         while (m.find()) {
@@ -89,7 +89,7 @@ public virtual class QDX_CustomFormatter {
         return template;
     }
 
-    private Map<String, String> replacementsMap;
+    public Map<String, String> replacementsMap;
 
     private void setReplacements(String jsonString, String prefix) {
         if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
@@ -126,7 +126,15 @@ public virtual class QDX_CustomFormatter {
         Map<String, Object> objectFieldsMap = sobjectParam.getPopulatedFieldsAsMap();
 
         for (String key : objectFieldsMap.keySet()) {
-            this.replacementsMap.put(objectName + '.' + key, String.valueOf(objectFieldsMap.get(key)));
+            if (objectFieldsMap.get(key) instanceof SObject) {
+                Map<String, Object> subFieldsMap = ((SObject)objectFieldsMap.get(key)).getPopulatedFieldsAsMap();
+                for (String subkey : subFieldsMap.keySet()) {
+                    this.replacementsMap.put(objectName + '.' + key + '.' + subkey, String.valueOf(subFieldsMap.get(subkey)));
+                }
+            } else {
+                this.replacementsMap.put(objectName + '.' + key, String.valueOf(objectFieldsMap.get(key)));
+            }
+            
         }
     }
 
