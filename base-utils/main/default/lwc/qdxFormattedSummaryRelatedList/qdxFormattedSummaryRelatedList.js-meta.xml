@@ -18,26 +18,12 @@
                 type="String"
                 label="Title" 
             />
-                <property
-                name="relatedSobject" 
-                type="String"
-                label="Related Sobject API Name" 
-            />
             <property
-                name="relatedLookup" 
+                name="propertyLabel" 
                 type="String"
-                label="Lookup Field API Name" 
+                label="Label of QDX property record" 
             />
-            <property
-                name="relatedFields" 
-                type="String"
-                label="Fields To Retrieve (comma separated)" 
-            />
-            <property
-                name="summaryFormat" 
-                type="String"
-                label="Summary Format" 
-            />
+            
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
