@@ -1,6 +1,6 @@
 <template>
     <lightning-card title={cardTitle} icon-name="custom:custom18">
-        <div class="slds-text-longform slds-align_absolute-center"> 
+        <div if:false={singleRecord} class="slds-text-longform slds-align_absolute-center"> 
             <ul class="slds-list_dotted"> 
                 <template for:each={formattedSummaries} for:item="formattedSummary">
                     <li key={formattedSummary.Id}>
@@ -8,6 +8,14 @@
                     </li>
                 </template>
             </ul> 
+        </div>
+        <div if:true={singleRecord}>
+            <template for:each={formattedSummaries} for:item="formattedSummary">
+                <p key={formattedSummary.Id} style="padding-left:1em;">
+                    <lightning-formatted-text value={formattedSummary.value} >
+                    </lightning-formatted-text>
+                </p>
+            </template>
         </div>
     </lightning-card>
 </template>

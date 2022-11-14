@@ -6,6 +6,7 @@ export default class QdxFormattedSummaryRelatedList extends LightningElement {
     @api cardTitle;
     @api propertyLabel;
     formattedSummaries = [];
+    singleRecord = false;
 
     connectedCallback() {
         
@@ -13,6 +14,7 @@ export default class QdxFormattedSummaryRelatedList extends LightningElement {
             .then(result => {
                 if (result) {
                     this.formattedSummaries = result;
+                    this.singleRecord = this.formattedSummaries.length == 1;
                 }
             });
     }
