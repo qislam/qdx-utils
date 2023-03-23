@@ -1,39 +1,32 @@
-/**
-* Query
-* 
-* @incapsulate
-*
-* @description Base class for object queries.
-* ===============================================================
-* Date                Developer           Description
-* -----------         ---------------     -----------------------
-* 09-Apr-2021         Qamar Islam         Created
+/*
+* @author Qamar Islam (https://github.com/qislam)
+* @description Base class for selector classes.
 */
-public virtual with sharing class Query {
-    public Query(){}
+public virtual with sharing class QDX_Query {
+    public QDX_Query(){}
 
-    private Query(String selectorClass)
+    private QDX_Query(String selectorClass)
     {
         this.selectorClass = selectorClass;
     }
 
-    private Query(String selectorClass, String objectName)
+    private QDX_Query(String selectorClass, String objectName)
     {
         this.selectorClass = selectorClass;
         this.objectName = objectName;
     }
 
-    public static Query bySelector(String selectorClass)
+    public static QDX_Query bySelector(String selectorClass)
     {
-        return new Query(selectorClass);
+        return new QDX_Query(selectorClass);
     }
 
-    public static Query bySelector(String selectorClass, String objectName)
+    public static QDX_Query bySelector(String selectorClass, String objectName)
     {
-        return new Query(selectorClass, objectName);
+        return new QDX_Query(selectorClass, objectName);
     }
 
-    public Query withSelect(String selectClause)
+    public QDX_Query withSelect(String selectClause)
     {
         
         if (String.isBlank(this.selectClause))
@@ -48,19 +41,19 @@ public virtual with sharing class Query {
         return this;
     }
 
-    public Query withDetails()
+    public QDX_Query withDetails()
     {
         this.withDetails = true;
         return this;
     }
 
-    public Query disableFls()
+    public QDX_Query disableFls()
     {
         this.applyFls = false;
         return this;
     }
 
-    public Query forId(Set<String> idSet)
+    public QDX_Query forId(Set<String> idSet)
     {
         this.idSet = idSet;
 
@@ -76,7 +69,7 @@ public virtual with sharing class Query {
         return this;
     }
 
-    public Query forWhere(String whereClause)
+    public QDX_Query forWhere(String whereClause)
     {
         if (String.isBlank(this.whereClause))
         {
@@ -90,7 +83,7 @@ public virtual with sharing class Query {
         return this;
     }
 
-    public Query forRef(Set<String> reference)
+    public QDX_Query forRef(Set<String> reference)
     {
         if (this.ref1 == null) 
         {
@@ -125,13 +118,13 @@ public virtual with sharing class Query {
         return this;
     }
 
-    public Query orderBy(String orderByClause)
+    public QDX_Query orderBy(String orderByClause)
     {
         this.orderByClause = orderByClause;
         return this;
     }
 
-    public Query limitBy(Integer limitClause)
+    public QDX_Query limitBy(Integer limitClause)
     {
         this.limitClause = String.valueOf(limitClause);
         return this;
@@ -145,7 +138,7 @@ public virtual with sharing class Query {
     public SObject[] run(Boolean doCache)
     {
         Type t = Type.forName(this.selectorClass);
-        Query selector = (Query)t.newInstance();
+        QDX_Query selector = (QDX_Query)t.newInstance();
         SObject[] result = new SObject[]{};
 
         Boolean isUsingCache = false;
