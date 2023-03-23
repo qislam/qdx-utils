@@ -1,3 +1,7 @@
+/*
+* @author Qamar Islam (https://github.com/qislam)
+* @description This class is for standard property.
+*/
 public with sharing class QDX_Property {
     public String value {
         get {

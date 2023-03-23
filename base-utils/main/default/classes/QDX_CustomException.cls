@@ -11,6 +11,7 @@ public with sharing class QDX_CustomException extends Exception{
         MISSING_PARAMETER,
         UNEXPECTED_VALUE
     }
+    
     public QDX_CustomException(ErrorCode errorCodeParam) {
         this(errorCodeParam, '');
     }
