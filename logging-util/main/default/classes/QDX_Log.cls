@@ -109,7 +109,7 @@ public with sharing class QDX_Log {
         if (eventsToPublish == null) { eventsToPublish = new List<QDX_Log__e>(); }
 
         QDX_Log__e[] errorEvents = new List<QDX_Log__e>();
-
+        
         for (QDX_Log__e event : eventsToPublish) {
             if (event.QDX_Level__c == LoggingLevel.ERROR.name()) { errorEvents.add(event); }
         }

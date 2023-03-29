@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__HomePage, lightning__RecordPage, lightning__AppPage">
+            <property
+                name="cardTitle" 
+                type="String"
+                label="Title" 
+            />
+            <property
+                name="cardContent" 
+                type="String"
+                label="HTML content to render" 
+            />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
