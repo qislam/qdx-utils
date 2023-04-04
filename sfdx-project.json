@@ -9,6 +9,10 @@
       "default": false
     },
     {
+      "path": "logging-util-2",
+      "default": false
+    },
+    {
       "path": "base-utils",
       "default": true
     }
