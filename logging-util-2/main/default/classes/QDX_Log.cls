@@ -2,8 +2,6 @@
 * QDX_Log
 * @author Qamar Islam (https://github.com/qislam)
 * @description This class is for replacing need to place QDX_Log.debug statements.
-* To create persistent error log records implement the QDX_Log.IError interface and create a 
-* metadata type record with the name of that class.
 * @credit This is inspired by https://github.com/rsoesemann/apex-unified-logging
 */
 public with sharing class QDX_Log {
@@ -216,10 +214,6 @@ public with sharing class QDX_Log {
 
         if (eventsToPublish == null) { eventsToPublish = new List<QDX_LogEvent__e>(); }
         eventsToPublish.add(currentEvent);
-
-        if (currentEvent.QDX_Level__c == LoggingLevel.ERROR.name()) {
-            publish();
-        } 
 	}
 
 	private static List<String> cast(List<Object> values) {

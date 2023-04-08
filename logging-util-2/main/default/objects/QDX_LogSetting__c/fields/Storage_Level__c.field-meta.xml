@@ -3,7 +3,7 @@
     <fullName>Storage_Level__c</fullName>
     <defaultValue>&quot;ERROR&quot;</defaultValue>
     <externalId>false</externalId>
-    <inlineHelpText>Logging Level that will create Log records. Otherwise, only the event will be fired but no log record will be created.</inlineHelpText>
+    <inlineHelpText>Only set at org level. This will determine what log records will be created.</inlineHelpText>
     <label>Storage Level</label>
     <length>8</length>
     <required>true</required>
