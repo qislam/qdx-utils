@@ -7,16 +7,36 @@
 * @credit This is inspired by https://github.com/rsoesemann/apex-unified-logging
 */
 public with sharing class QDX_Log {
-	private static final String ORG_NAMESPACE = null; //[SELECT NamespacePrefix FROM Organization].NamespacePrefix;
-    private static final String CLASSNAME = QDX_Log.class.getName();
-	private static final Pattern STACK_LINE = Pattern.compile('^(?:Class\\.)?([^.]+)\\.?([^\\.\\:]+)?[\\.\\:]?([^\\.\\:]*): line (\\d+), column (\\d+)$');
-	private static final String THIS_CONTEXT = timestamp();
-    private static List<QDX_LogEvent__e> eventsToPublish;
 
-    @TestVisible
-    private static Boolean setupClassConfig = true;
+    @InvocableMethod(label = 'Publish Error Log Events')
+    public static void publishError(Requests[] reqList){
+        Requests req = reqList[0];
+        currentEvent = new QDX_LogEvent__e();
+        currentEvent.QDX_User__c = UserInfo.getUserId();
+        currentEvent.QDX_UserName__c = UserInfo.getUserName();
+        currentEvent.QDX_Message__c = req.ErrorMessage;
+        currentEvent.QDX_Level__c = LoggingLevel.ERROR.name();
+        currentEvent.QDX_Context__c = req.contextId == null ? getContextId() : req.contextId;
+        currentEvent.QDX_Class__c = 'FLOW:' + req.flowName;
+        currentEvent.QDX_Method__c = req.flowComponent;
 
-	// PUBLIC
+        if (eventsToPublish == null) { eventsToPublish = new List<QDX_LogEvent__e>(); }
+        eventsToPublish.add(currentEvent);
+
+        publish();
+    }
+
+    public class Requests {
+        @InvocableVariable
+        public String contextId;
+        @InvocableVariable
+        public String flowName;
+        @InvocableVariable
+        public String flowComponent;
+        @InvocableVariable
+        public String errorMessage;
+    }
+
     //ERROR level
 	public static void error(String message) {
 		error(message, new List<Object>(), getContextId());
@@ -122,6 +142,12 @@ public with sharing class QDX_Log {
     }
 
     // PRIVATE
+
+    private static final String ORG_NAMESPACE = null; //[SELECT NamespacePrefix FROM Organization].NamespacePrefix;
+    private static final String CLASSNAME = QDX_Log.class.getName();
+	private static final Pattern STACK_LINE = Pattern.compile('^(?:Class\\.)?([^.]+)\\.?([^\\.\\:]+)?[\\.\\:]?([^\\.\\:]*): line (\\d+), column (\\d+)$');
+	private static final String THIS_CONTEXT = timestamp();
+    private static List<QDX_LogEvent__e> eventsToPublish;
     private static String getContextId() {
         return Request.getCurrent().getRequestId();
     }
@@ -168,7 +194,13 @@ public with sharing class QDX_Log {
 	private static void emit(String message, List<Object> values, String contextId, LoggingLevel level) {
         String[] qdxLevels = new String[]{'ERROR', 'INFO', 'DEBUG', 'FINE'};
 
-        String currentLoggingLevel = QDX_LogSetting__c.getInstance().Logging_Level__c;
+        String currentLoggingLevel;
+        try {
+            currentLoggingLevel = QDX_LogSetting__c.getInstance().Logging_Level__c;
+        } catch (Exception e) {
+            currentLoggingLevel = 'ERROR';
+        }
+
         if (qdxLevels.indexOf(currentLoggingLevel) < qdxLevels.indexOf(level.name())) { return; }
         
 		if (!values.isEmpty()) { message = String.format(message, cast(values)); }
