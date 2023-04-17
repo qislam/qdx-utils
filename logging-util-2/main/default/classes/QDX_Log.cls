@@ -6,6 +6,19 @@
 */
 public with sharing class QDX_Log {
 
+    @AuraEnabled
+    public static void publishLog(String message, String component, String logLevel, String contextId) {
+        if (contextId == null) { contextId = getContextId(); }
+
+        LoggingLevel currentLevel = LoggingLevel.DEBUG;
+        if ((new String[]{'ERROR', 'INFO', 'DEBUG', 'FINE'}).contains(logLevel.toUpperCase())) {
+            currentLevel = LoggingLevel.valueOf(logLevel);
+        }
+
+        emit(message, new List<Object>(), contextId, currentLevel);
+        publish();
+    }
+
     @InvocableMethod(label = 'Publish Error Log Events')
     public static void publishError(Requests[] reqList){
         Requests req = reqList[0];
@@ -130,10 +143,15 @@ public with sharing class QDX_Log {
     public static void limits() {
         emitLimits(getContextId());
     }
+    public static void limits(String contextId) {
+        emitLimits(contextId);
+    }
 
     public static void publish() {
         if (eventsToPublish == null) { eventsToPublish = new List<QDX_LogEvent__e>(); }
-        limits();
+        if (eventsToPublish.isEmpty()) { return; }
+
+        limits(eventsToPublish[0].QDX_Context__c);
 
         if (!eventsToPublish.isEmpty()) { EventBus.publish(eventsToPublish); }
         eventsToPublish.clear();
