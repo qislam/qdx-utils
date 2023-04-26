@@ -1,7 +1,7 @@
 {
   "packageDirectories": [
     {
-      "path": "src",
+      "path": "trigger-util",
       "default": false
     },
     {
