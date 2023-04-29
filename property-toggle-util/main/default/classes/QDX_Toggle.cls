@@ -6,13 +6,7 @@
 public with sharing class QDX_Toggle {
     @AuraEnabled
     public static Boolean isActive(String featureLabel) {
-
-        Boolean result = false;
-        if (QDX_Property.forLabel(featureLabel)?.value.toUpperCase() == 'TRUE') {
-            result = true;
-        }
-
-        return result;
+        return QDX_Property.forLabel(featureLabel).isActive;
     }
 
     @InvocableMethod(label='getFeatureToggle')

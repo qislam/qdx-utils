@@ -6,13 +6,51 @@ public with sharing class QDX_Property {
     public String value {
         get {
             if (this.value == null) {
-                if (this.selectedProperty == null) {
-                    this.value = '';
-                } else {
-                    this.value = this.selectedProperty.Value__c;
-                }
+                this.value = this.textValue;
             }
             return this.value;
+        }
+        private set;
+    }
+
+    public String textValue {
+        get {
+            if (this.textValue == null) {
+                this.textValue = this.selectedProperty?.TextValue__c;
+                if (String.isNotBlank(this.selectedProperty?.LongTextValue__c)) {
+                    this.textValue = this.selectedProperty?.LongTextValue__c;
+                }
+                if (this.textValue == null) {
+                    this.textValue = '';
+                }
+            }
+            return this.textValue;
+        }
+        private set;
+    }
+
+    public Decimal numberValue {
+        get {
+            if (this.numberValue == null) {
+                this.numberValue = this.selectedProperty?.NumberValue__c;
+                if (this.numberValue == null) {
+                    this.numberValue = 0;
+                }
+            }
+            return this.numberValue;
+        }
+        private set;
+    }
+
+    public Boolean isActive {
+        get {
+            if (this.isActive == null) {
+                this.isActive = this.selectedProperty?.isActive__c;
+                if (this.isActive == null) {
+                    this.isActive = false;
+                }
+            }
+            return this.isActive;
         }
         private set;
     }
@@ -31,7 +69,10 @@ public with sharing class QDX_Property {
         QDX_Property__mdt[] properties = [
             SELECT DeveloperName
             , Label
-            , Value__c
+            , TextValue__c
+            , LongTextValue__c
+            , NumberValue__c
+            , isActive__c
             , isDefault__c
             , QDX_SF_Instance__c
             , QDX_SF_Instance__r.DeveloperName
