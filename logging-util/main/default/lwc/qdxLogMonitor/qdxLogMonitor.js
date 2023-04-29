@@ -39,8 +39,14 @@ export default class QdxLogMonitor extends LightningElement {
         {
             type: 'number',
             fieldName: 'QDX_Line__c',
-            label: 'Line',
+            label: '#',
             initialWidth: 50
+        },
+        {
+            type: 'text',
+            fieldName: 'QDX_Level__c',
+            label: 'Level',
+            initialWidth: 75
         },
         {
             type: 'text',
@@ -91,7 +97,7 @@ export default class QdxLogMonitor extends LightningElement {
         };
 
         // Invoke subscribe method of empApi. Pass reference to messageCallback
-        subscribe('/event/QDX_Log__e', -1, messageCallback.bind(this)).then(response => {
+        subscribe('/event/QDX_LogEvent__e', -1, messageCallback.bind(this)).then(response => {
             // Response contains the subscription information on subscribe call
             console.log('Subscription request sent to: ', JSON.stringify(response.channel));
         });
