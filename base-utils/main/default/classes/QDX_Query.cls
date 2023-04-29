@@ -12,16 +12,15 @@
 public virtual with sharing class QDX_Query {
     public QDX_Query(){}
 
-    private QDX_Query(String selectorClass)
-    {
-        this.selectorClass = selectorClass;
+    public virtual String getObjectName() 
+    { 
+        if (this.objectName != null) { return this.objectName; }
+        return 'Account'; 
     }
+    public virtual String getFields() { return 'Id'; }
+    public virtual String getSubSelects() { return ''; }
 
-    private QDX_Query(String selectorClass, String objectName)
-    {
-        this.selectorClass = selectorClass;
-        this.objectName = objectName;
-    }
+    
 
     public static QDX_Query bySelector(String selectorClass)
     {
@@ -227,11 +226,14 @@ public virtual with sharing class QDX_Query {
     private Boolean withDetails = false;
     private Boolean applyFls = true;
 
-    public virtual String getObjectName() 
-    { 
-        if (this.objectName != null) { return this.objectName; }
-        return 'Account'; 
+    private QDX_Query(String selectorClass)
+    {
+        this.selectorClass = selectorClass;
     }
-    public virtual String getFields() { return 'Id'; }
-    public virtual String getSubSelects() { return ''; }
+
+    private QDX_Query(String selectorClass, String objectName)
+    {
+        this.selectorClass = selectorClass;
+        this.objectName = objectName;
+    }
 }
