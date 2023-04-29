@@ -4,7 +4,7 @@
     <description>Name of sandbox to which current setting is applicable.</description>
     <externalId>false</externalId>
     <fieldManageability>DeveloperControlled</fieldManageability>
-    <label>QDX SF Instance</label>
+    <label>SF Instance</label>
     <referenceTo>QDX_SF_Instance__mdt</referenceTo>
     <relationshipLabel>QDX Properties</relationshipLabel>
     <relationshipName>QDX_Properties</relationshipName>

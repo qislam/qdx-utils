@@ -9,7 +9,11 @@
       "default": false
     },
     {
-      "path": "logging-util-2",
+      "path": "formatter-util",
+      "default": false
+    },
+    {
+      "path": "property-toggle-util",
       "default": false
     },
     {

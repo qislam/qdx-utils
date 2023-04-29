@@ -74,13 +74,28 @@ public with sharing class QDX_Property {
             , NumberValue__c
             , isActive__c
             , isDefault__c
+            , ProfileId__c
+            , UserName__c
             , QDX_SF_Instance__c
             , QDX_SF_Instance__r.DeveloperName
             FROM QDX_Property__mdt
             WHERE Label = :propertyLabel
+            ORDER BY UserName__c NULLS LAST
+            , ProfileId__c NULLS LAST
+            , QDX_SF_Instance__c NULLS LAST
         ];
 
         for (QDX_Property__mdt current : properties) {
+            if (current.QDX_SF_Instance__r.DeveloperName == instanceName 
+                    && current.UserName__c == UserInfo.getUserName()) {
+                selectedProperty = current;
+                break;
+            }
+            if (current.QDX_SF_Instance__r.DeveloperName == instanceName
+                    && current.ProfileId == UserInfo.getProfileId()) {
+                selectedProperty = current;
+                break;
+            }
             if (current.QDX_SF_Instance__r.DeveloperName == instanceName) {
                 selectedProperty = current;
                 break;
