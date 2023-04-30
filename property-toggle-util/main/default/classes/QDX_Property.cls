@@ -20,9 +20,7 @@ public with sharing class QDX_Property {
                 if (String.isNotBlank(this.selectedProperty?.LongTextValue__c)) {
                     this.textValue = this.selectedProperty?.LongTextValue__c;
                 }
-                if (this.textValue == null) {
-                    this.textValue = '';
-                }
+                if (this.textValue == null) { this.textValue = ''; }
             }
             return this.textValue;
         }
@@ -46,9 +44,7 @@ public with sharing class QDX_Property {
         get {
             if (this.isActive == null) {
                 this.isActive = this.selectedProperty?.isActive__c;
-                if (this.isActive == null) {
-                    this.isActive = false;
-                }
+                if (this.isActive == null) { this.isActive = false; }
             }
             return this.isActive;
         }
@@ -60,6 +56,7 @@ public with sharing class QDX_Property {
     }
 
     private QDX_Property__mdt selectedProperty;
+    @TestVisible private static QDX_Property__mdt testProperty;
 
     private QDX_Property(String propertyLabel) {
         System.Domain domainObj = DomainParser.parse(URL.getSalesforceBaseUrl().toExternalForm());
@@ -85,23 +82,17 @@ public with sharing class QDX_Property {
             , QDX_SF_Instance__c NULLS LAST
         ];
 
+        if (Test.isRunningTest() && testProperty != null) {
+            properties.add(testProperty);
+        }
+
         for (QDX_Property__mdt current : properties) {
-            if (current.QDX_SF_Instance__r.DeveloperName == instanceName 
-                    && current.UserName__c == UserInfo.getUserName()) {
-                selectedProperty = current;
-                break;
-            }
-            if (current.QDX_SF_Instance__r.DeveloperName == instanceName
-                    && current.ProfileId__c == UserInfo.getProfileId()) {
-                selectedProperty = current;
-                break;
-            }
-            if (current.QDX_SF_Instance__r.DeveloperName == instanceName 
-                    && String.isBlank(current.UserName__c)
-                    && String.isBlank(current.ProfileId__c)) {
-                selectedProperty = current;
-                break;
-            }
+            if (current.UserName__c == UserInfo.getUserName() && current.QDX_SF_Instance__r.DeveloperName == instanceName) { selectedProperty = current; break; }
+            
+            if (current.ProfileId__c == UserInfo.getProfileId() && current.QDX_SF_Instance__r.DeveloperName == instanceName) { selectedProperty = current; break; }
+            
+            if (String.isBlank(current.UserName__c) && String.isBlank(current.ProfileId__c) && current.QDX_SF_Instance__r.DeveloperName == instanceName) { selectedProperty = current; break; }
+            
             if (current.isDefault__c) {
                 selectedProperty = current;
             }
