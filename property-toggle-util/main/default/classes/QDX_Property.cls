@@ -92,11 +92,13 @@ public with sharing class QDX_Property {
                 break;
             }
             if (current.QDX_SF_Instance__r.DeveloperName == instanceName
-                    && current.ProfileId == UserInfo.getProfileId()) {
+                    && current.ProfileId__c == UserInfo.getProfileId()) {
                 selectedProperty = current;
                 break;
             }
-            if (current.QDX_SF_Instance__r.DeveloperName == instanceName) {
+            if (current.QDX_SF_Instance__r.DeveloperName == instanceName 
+                    && String.isBlank(current.UserName__c)
+                    && String.isBlank(current.ProfileId__c)) {
                 selectedProperty = current;
                 break;
             }
