@@ -51,6 +51,17 @@ public with sharing class QDX_Property {
         private set;
     }
 
+    public Boolean isFound {
+        get {
+            if (this.isFound == null) {
+                this.isFound = false;
+                if (this.selectedProperty != null) { this.isFound = true; }
+            }
+            return this.isFound;
+        }
+        private set;
+    }
+
     public static QDX_Property forLabel(String propertyLabel) {
         return new QDX_Property(propertyLabel);
     }
