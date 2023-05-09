@@ -55,6 +55,16 @@ public with sharing class QDX_Trigger {
                     handler.handleBeforeUpdate(Trigger.new, Trigger.oldMap);
                 }
             }
+            when BEFORE_DELETE {
+                Boolean skipBeforeDelete = false;
+                if (settingsMap?.get('skipBeforeDelete') != null) {
+                    skipBeforeDelete = (Boolean)settingsMap.get('skipBeforeDelete');
+                }
+
+                if (!skipBeforeDelete) {
+                    handler.handleBeforeDelete(Trigger.old);
+                }
+            }
             when AFTER_INSERT {
                 Boolean skipAfterInsert = false;
                 if (settingsMap?.get('skipAfterInsert') != null) {
@@ -76,7 +86,25 @@ public with sharing class QDX_Trigger {
                 }
             }
             when AFTER_DELETE {
-                //prevent deletion of sensitive data
+                Boolean skipAfterDelete = false;
+                if (settingsMap?.get('skipAfterDelete') != null) {
+                    skipAfterDelete = (Boolean)settingsMap.get('skipAfterDelete');
+                }
+
+                if (!skipAfterDelete) {
+                    handler.handleAfterDelete(Trigger.old);
+                }
+            }
+            when AFTER_UNDELETE {
+                //prevent undeletion of sensitive data
+                Boolean skipAfterUndelete = false;
+                if (settingsMap?.get('skipAfterUndelete') != null) {
+                    skipAfterUndelete = (Boolean)settingsMap.get('skipAfterUndelete');
+                }
+
+                if (!skipAfterUndelete) {
+                    handler.handleAfterUndelete(Trigger.new);
+                }
             }
             when else {
                 //do nothing for AFTER_UNDELETE, BEFORE_DELETE, or BEFORE_UPDATE

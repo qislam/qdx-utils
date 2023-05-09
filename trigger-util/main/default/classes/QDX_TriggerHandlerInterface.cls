@@ -8,4 +8,7 @@ public interface QDX_TriggerHandlerInterface {
     void handleBeforeUpdate(sObject[] newRecords, Map<Id, sObject> oldMap);
     void handleAfterInsert(sObject[] newRecords);
     void handleAfterUpdate(sObject[] newRecords);
+    void handleBeforeDelete(sObject[] oldRecords);
+    void handleAfterDelete(sObject[] oldRecords);
+    void handleAfterUndelete(sObject[] newRecords);
 }
