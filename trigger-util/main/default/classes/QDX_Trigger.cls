@@ -28,8 +28,8 @@ public with sharing class QDX_Trigger {
 
         try {
             handler = (QDX_TriggerHandlerInterface)Type.forName(handlerClassName)?.newInstance();
-        } catch(Exception e) {
-            System.debug(e.getMessage());
+        } catch(Exception ex) {
+            QDX_Log.error(ex);
         }
 
         if (handler == null) { return; }
@@ -106,9 +106,8 @@ public with sharing class QDX_Trigger {
                     handler.handleAfterUndelete(Trigger.new);
                 }
             }
-            when else {
-                //do nothing for AFTER_UNDELETE, BEFORE_DELETE, or BEFORE_UPDATE
-            }
         }
+
+        QDX_Log.publish();
     }
 }
