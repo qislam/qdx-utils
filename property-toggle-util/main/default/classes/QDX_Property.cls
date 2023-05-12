@@ -66,6 +66,16 @@ public with sharing class QDX_Property {
         return new QDX_Property(propertyLabel);
     }
 
+    @AuraEnabled
+    public static string propValueForLabel(String propertyLabel){
+        return QDX_Property.forLabel(propertyLabel).value;
+    }
+
+    @InvocableMethod(label='Property Value For Label' description='Returns the property value for the given label')
+    public static String[] propValueForLabel(String[] propertyLabels) {
+        return new String[]{QDX_Property.forLabel(propertyLabels[0]).value};
+    }
+
     private QDX_Property__mdt selectedProperty;
     @TestVisible private static QDX_Property__mdt testProperty;
 
