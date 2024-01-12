@@ -1,5 +1,5 @@
 /**
-* Util
+* QDX_Util
 * 
 * @incapsulate
 *
@@ -9,7 +9,7 @@
 * -----------         ---------------     -----------------------
 * 10-Mar-2021         Qamar Islam         Created
 */
-public with sharing class Util 
+public with sharing class QDX_Util 
 {
     public static String userProfileName
     {
