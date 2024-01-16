@@ -4,34 +4,34 @@
 * @description This class is for formatting strings using attribute names.
 */
 
-public virtual class QDX_CustomFormatter {
+public with sharing class QDX_CustomFormatter {
 
-    public QDX_CustomFormatter() {
-        this.replacementsMap = new Map<String, String>();
+    public static QDX_CustomFormatter newInstance() {
+        return new QDX_CustomFormatter();
     }
 
-    public QDX_CustomFormatter(String jsonString) {
-        setReplacements(jsonString, 'json');
+    public static QDX_CustomFormatter newInstance(String jsonString) {
+        return newInstance().addReplacements(jsonString);
     }
 
-    public QDX_CustomFormatter(String jsonString, String prefix) {
-        setReplacements(jsonString, prefix);
+    public static QDX_CustomFormatter newInstance(String jsonString, String prefix) {
+        return newInstance().addReplacements(jsonString, prefix);
     }
 
-    public QDX_CustomFormatter(Map<String, Object> replacements) {
-        setReplacements(replacements, 'json');
+    public static QDX_CustomFormatter newInstance(Map<String, Object> replacements) {
+        return newInstance().addReplacements(replacements, 'json');
     }
 
-    public QDX_CustomFormatter(Map<String, Object> replacements, String prefix) {
-        setReplacements(replacements, prefix);
+    public static QDX_CustomFormatter newInstance(Map<String, Object> replacements, String prefix) {
+        return newInstance().addReplacements(replacements, prefix);
     }
 
-    public QDX_CustomFormatter(sObject sobjectParam) {
-        setReplacements(sobjectParam, null);
+    public static QDX_CustomFormatter newInstance(sObject sobjectParam) {
+        return newInstance().addReplacements(sobjectParam, null);
     }
 
-    public QDX_CustomFormatter(sObject sobjectParam, String objectNameParam) {
-        setReplacements(sobjectParam, objectNameParam);
+    public static QDX_CustomFormatter newInstance(sObject sobjectParam, String objectNameParam) {
+        return newInstance().addReplacements(sobjectParam, objectNameParam);
     }
 
     public QDX_CustomFormatter addReplacements(String jsonString) {
@@ -44,12 +44,12 @@ public virtual class QDX_CustomFormatter {
         return this;
     }
 
-    public QDX_CustomFormatter addReplacements(Map<String, String> replacements) {
+    public QDX_CustomFormatter addReplacements(Map<String, Object> replacements) {
         setReplacements(replacements, 'json');
         return this;
     }
 
-    public QDX_CustomFormatter addReplacements(Map<String, String> replacements, String prefix) {
+    public QDX_CustomFormatter addReplacements(Map<String, Object> replacements, String prefix) {
         setReplacements(replacements, prefix);
         return this;
     }
@@ -89,7 +89,11 @@ public virtual class QDX_CustomFormatter {
         return template;
     }
 
-    public Map<String, String> replacementsMap;
+    private Map<String, String> replacementsMap;
+
+    private QDX_CustomFormatter() {
+        this.replacementsMap = new Map<String, String>();
+    }
 
     private void setReplacements(String jsonString, String prefix) {
         if (this.replacementsMap == null) { this.replacementsMap = new Map<String, String>(); }
