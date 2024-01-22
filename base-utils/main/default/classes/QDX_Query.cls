@@ -1,13 +1,7 @@
-/**
+/*
 * QDX_Query
-* 
-* @incapsulate
-*
-* @description Base class for object queries.
-* ===============================================================
-* Date                Developer           Description
-* -----------         ---------------     -----------------------
-* 09-Apr-2021         Qamar Islam         Created
+* @author Qamar Islam (https://github.com/qislam)
+* @description This class is for standardizing exceptions.
 */
 public virtual with sharing class QDX_Query {
     public QDX_Query(){}

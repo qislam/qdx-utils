@@ -1,13 +1,7 @@
-/**
+/*
 * QDX_QueryCache
-* 
-* @incapsulate
-*
-* @description For storing cache of query results.
-* ===============================================================
-* Date                Developer           Description
-* -----------         ---------------     -----------------------
-* 09-Apr-2021         Qamar Islam         Created
+* @author Qamar Islam (https://github.com/qislam)
+* @description This class is for standardizing exceptions.
 */
 public with sharing class QDX_QueryCache {
 
