@@ -17,6 +17,10 @@
       "default": false
     },
     {
+      "path": "insurance-app-util",
+      "default": false
+    },
+    {
       "path": "base-utils",
       "default": true
     }
